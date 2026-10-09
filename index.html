@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Academia Acheron — Prototipo</title>
+  <style>
+    :root { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.55; }
+    body { max-width: 42rem; margin: 0 auto; padding: 1.25rem; }
+    h1, h2 { line-height: 1.2; }
+    .eyebrow { font-size: .9rem; opacity: .8; }
+    .panel { border: 1px solid currentColor; border-radius: .75rem; padding: 1rem; margin: 1rem 0; }
+    .actions { display: grid; gap: .75rem; }
+    button { font: inherit; text-align: left; padding: .9rem 1rem; border: 2px solid currentColor; border-radius: .6rem; background: transparent; color: inherit; min-height: 3rem; }
+    button:focus-visible { outline: 4px solid #1677ff; outline-offset: 3px; }
+    #result { margin-top: 1rem; }
+    .status { border-left: .3rem solid currentColor; padding: .75rem 1rem; }
+    .small { font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">PROTOTIPO ACCESIBLE · CAPÍTULO 1</p>
+    <h1>Academia Acheron</h1>
+    <h2>La invitación</h2>
+
+    <section class="panel" aria-labelledby="scene-title">
+      <h3 id="scene-title">Martes por la mañana</h3>
+      <p>El sobre llega un martes por la mañana. No tiene estampillas convencionales ni el nombre de una empresa de mensajería. Tu nombre completo está impreso en letras plateadas sobre una superficie negra y mate.</p>
+      <p>Debajo aparece una única inscripción: <strong>Academia Acheron</strong>.</p>
+      <p>Dentro encuentras una carta de papel grueso, una tarjeta de identificación provisional y una hoja con instrucciones para confirmar tu plaza.</p>
+      <blockquote>
+        <p>Te informamos de que has sido seleccionado para ingresar en la Academia Acheron, una institución internacional dedicada a la formación de personas con capacidades intelectuales excepcionales.</p>
+        <p>Entre miles de candidatos, has obtenido una de las doce plazas extraordinarias de nuestro próximo programa académico. La institución cubrirá los gastos de alojamiento, manutención y formación.</p>
+        <p>Para conservar tu plaza, debes confirmar tu aceptación en un plazo de setenta y dos horas. La información sobre los criterios de selección y determinadas áreas de investigación se comunicará exclusivamente a los candidatos admitidos.</p>
+      </blockquote>
+      <p>Vuelves a leer el párrafo de las doce plazas. No recuerdas haber solicitado ingreso en una institución con ese nombre. Sin embargo, la carta incluye tu fecha de nacimiento, tu dirección actual y una referencia a resultados académicos que no aparecen en ningún currículum público.</p>
+      <p>La tarjeta lleva tu fotografía, aunque no recuerdas haberla proporcionado. Por un instante, tienes la impresión de que alguien ha estado estudiándote sin que lo supieras.</p>
+      <p>La carta ofrece una oportunidad que podría cambiar tu vida. Pero algo no encaja. Tienes setenta y dos horas para decidir qué hacer.</p>
+    </section>
+
+    <section aria-labelledby="actions-title">
+      <h2 id="actions-title">¿Qué haces?</h2>
+      <p>Selecciona una acción. No necesitas escribir nada.</p>
+      <div class="actions">
+        <button type="button" data-action="letter">Examinar la carta con más detenimiento</button>
+        <button type="button" data-action="card">Examinar la tarjeta de identificación</button>
+        <button type="button" data-action="code">Revisar el código y las instrucciones de confirmación</button>
+        <button type="button" data-action="research">Buscar información sobre la Academia Acheron</button>
+        <button type="button" data-action="wait">Dejar la carta a un lado y pensar antes de actuar</button>
+      </div>
+    </section>
+
+    <section id="result" class="panel" aria-labelledby="result-title" hidden>
+      <h2 id="result-title">Resultado de la acción</h2>
+      <div id="result-text" class="status" role="status" aria-live="polite" aria-atomic="true"></div>
+      <p><button type="button" id="back">Volver a las opciones</button></p>
+    </section>
+
+    <p class="small">Esta es una demostración técnica inicial. El progreso y los guardados todavía no se conservan al cerrar la página.</p>
+  </main>
+  <script>
+    const results = {
+      letter: "Examinas la carta. No aparece ningún nombre de contacto directo, solo la firma de la Dirección de Admisiones. En el reverso encuentras una línea casi imperceptible: «La selección comenzó mucho antes de la solicitud». No recuerdas haber presentado ninguna solicitud.",
+      card: "Examinas la tarjeta. La fotografía es reciente, pero el código de identificación contiene una secuencia adicional: A-12-07. No sabes qué significa. La tarjeta no indica ningún cargo ni función, solo tu nombre y la palabra «Candidato».",
+      code: "Revisas las instrucciones. El código alfanumérico permite confirmar la plaza, pero la hoja advierte que la confirmación autoriza a la academia a realizar una evaluación inicial de aptitud. No explica en qué consiste esa evaluación.",
+      research: "Intentas averiguar más sobre la Academia Acheron. La carta no incluye una dirección física, solo un portal de admisiones. La institución parece tener una presencia pública mínima para una organización de tanto prestigio. Es una primera señal que merece investigación.",
+      wait: "Dejas la carta sobre la mesa y te tomas un momento para pensar. No tienes que responder de inmediato. Las setenta y dos horas empiezan a contar desde la recepción, pero antes de aceptar puedes examinar las pruebas que tienes delante."
+    };
+    const resultSection = document.getElementById("result");
+    const resultText = document.getElementById("result-text");
+    const backButton = document.getElementById("back");
+    document.querySelectorAll("button[data-action]").forEach((button) => {
+      button.addEventListener("click", () => {
+        resultText.textContent = results[button.dataset.action];
+        resultSection.hidden = false;
+        document.getElementById("result-title").focus?.();
+        resultSection.scrollIntoView({ block: "start" });
+      });
+    });
+    backButton.addEventListener("click", () => {
+      resultSection.hidden = true;
+      document.querySelector("button[data-action]").focus();
+    });
+    document.getElementById("result-title").setAttribute("tabindex", "-1");
+  </script>
+</body>
+</html>
